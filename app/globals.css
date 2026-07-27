@@ -1,26 +1,322 @@
+/* ==========================================================================
+   1. GOOGLE FONT IMPORTS
+   (Must precede all other statements except @charset — @import rules
+   are only valid at the very top of the stylesheet.)
+   ========================================================================== */
+
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
 @import "tailwindcss";
 
+/* ==========================================================================
+   2. ROOT VARIABLES
+   ========================================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- Core surfaces --- */
+  --background: #050203;
+  --surface: #111111;
+  --surface-light: #1a1818;
+
+  /* --- Foreground / text --- */
+  --foreground: #f9f6ee;
+  --foreground-muted: #d9d4ca;
+
+  /* --- Accent (gold) --- */
+  --accent: #f7ef8a;
+  --accent-dark: #d8cb63;
+  --accent-light: #fff7b8;
+
+  /* --- Neutral grayscale ramp --- */
+  --gray-950: #080808;
+  --gray-900: #111111;
+  --gray-800: #202020;
+  --gray-700: #3a3a3a;
+  --gray-600: #666666;
+  --gray-400: #a6a6a6;
+
+  /* --- Semantic / feedback colours --- */
+  --success: #4caf6a;
+  --warning: #cda64a;
+  --error: #d25b5b;
+
+  /* --- Typography --- */
+  --font-heading: "Cormorant Garamond", serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "Space Mono", monospace;
+
+  /* --- Layout defaults --- */
+  --line-height-base: 1.6;
 }
 
+/* Expose tokens to Tailwind v4's CSS-first theme so utilities like
+   bg-background / text-accent / font-heading are generated automatically. */
 @theme inline {
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-light: var(--surface-light);
+
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-foreground-muted: var(--foreground-muted);
+
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+  --color-accent-light: var(--accent-light);
+
+  --color-gray-950: var(--gray-950);
+  --color-gray-900: var(--gray-900);
+  --color-gray-800: var(--gray-800);
+  --color-gray-700: var(--gray-700);
+  --color-gray-600: var(--gray-600);
+  --color-gray-400: var(--gray-400);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-error: var(--error);
+
+  --font-heading: var(--font-heading);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ==========================================================================
+   3. BASE RESET
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100svh;
+  line-height: var(--line-height-base);
+
+  /* Font smoothing */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Text rendering optimisation */
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* ==========================================================================
+   4. GLOBAL TYPOGRAPHY
+   ========================================================================== */
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+
+h1 {
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 400;
+}
+
+h2 {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
+}
+
+h4 {
+  font-size: 1.5rem;
+}
+
+h5 {
+  font-size: 1.25rem;
+}
+
+h6 {
+  font-size: 1rem;
+}
+
+p {
+  color: var(--foreground-muted);
+}
+
+code,
+pre,
+.mono {
+  font-family: var(--font-mono);
+  letter-spacing: 0.02em;
+}
+
+pre {
+  background: var(--surface);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+code {
+  background: var(--surface);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+/* ==========================================================================
+   5. UTILITY CLASSES
+   ========================================================================== */
+
+/* --- Typography utilities --- */
+.text-heading {
+  font-family: var(--font-heading);
+}
+
+.text-body {
+  font-family: var(--font-body);
+}
+
+.text-mono {
+  font-family: var(--font-mono);
+}
+
+/* --- Background utilities --- */
+.bg-background {
+  background-color: var(--background);
+}
+
+.bg-surface {
+  background-color: var(--surface);
+}
+
+.bg-surface-light {
+  background-color: var(--surface-light);
+}
+
+/* --- Text colour utilities --- */
+.text-accent {
+  color: var(--accent);
+}
+
+.text-muted {
+  color: var(--foreground-muted);
+}
+
+/* --- Border utilities --- */
+.border-accent {
+  border-color: var(--accent);
+}
+
+.border-muted {
+  border-color: var(--gray-700);
+}
+
+/* ==========================================================================
+   6. SCROLLBAR STYLING
+   ========================================================================== */
+
+/* WebKit browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--accent-dark);
+  border-radius: 999px;
+  border: 2px solid var(--background);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-dark) var(--background);
+}
+
+/* ==========================================================================
+   7. SELECTION STYLING
+   ========================================================================== */
+
+::selection {
+  background-color: var(--accent);
+  color: var(--gray-950);
+}
+
+::-moz-selection {
+  background-color: var(--accent);
+  color: var(--gray-950);
+}
+
+/* ==========================================================================
+   8. FOCUS STYLES
+   ========================================================================== */
+
+/* Remove default outline; rely on focus-visible for accessible, keyboard-only rings */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Ensure form elements and interactive components get a visible ring too */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
