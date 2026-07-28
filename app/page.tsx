@@ -7,11 +7,12 @@ import Archive from "@/components/Archive";
 import Partners from "@/components/Partners";
 import FinalCallToAction from "@/components/FinalCallToAction";
 import UpcomingEvents from "@/components/UpcomingEvents";
+import { Section } from "lucide-react";
 
 export default function Home() {
   return (
     <main>
-      <Hero />
+      <Hero nextSectionId="content"/>
       <WhoAreYou />
       <Projects />
       <Philosophy />
