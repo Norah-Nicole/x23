@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -51,14 +52,14 @@ export default function Navbar() {
       >
         <nav className="flex items-center justify-between px-6 py-4 sm:px-8">
           {/* Logo */}
-          <a href="/" className="font-display text-lg font-semibold tracking-tight text-white">
+          <Link href="/" className="font-display text-lg font-semibold tracking-tight text-white">
             <Image 
              src="/images/logos/logo.png"
              alt="Kijivuland"
              width={50}
              height={50}
              />
-          </a>
+          </Link>
 
           {/* Custom hamburger toggle */}
           <button
