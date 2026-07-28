@@ -76,9 +76,9 @@ export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
                 <button
                   onClick={onClose}
                   aria-label="Close menu"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5"
+                  className="flex h-11 w-11 items-center justify-center"
                 >
-                  <X className="h-5 w-5 text-white" />
+                  <X className="h-6 w-6 text-white" />
                 </button>
               </div>
 
@@ -89,7 +89,7 @@ export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
                 exit="exit"
                 className="mt-16 flex flex-col gap-2"
               >
-                {navLinks.map((link) => (
+                {navLinks.map((link, index) => (
                   <motion.a
                     key={link.id}
                     href={link.href}
@@ -97,8 +97,8 @@ export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
                     onClick={onClose}
                     className="group flex items-baseline gap-4 py-3 text-4xl font-display font-medium tracking-tight text-slate-300 transition-colors hover:text-white sm:text-5xl"
                   >
-                    <span className="text-sm font-mono text-slate-600 group-hover:text-blue-500">
-                      0{navLinks.indexOf(link) + 1}
+                    <span className="text-sm font-mono text-slate-600 group-hover:text-amber-400">
+                      0{index + 1}
                     </span>
                     {link.label}
                   </motion.a>
@@ -110,7 +110,7 @@ export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
               <a
                 href="/contact"
                 onClick={onClose}
-                className="flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-blue-500"
+                className="flex w-full items-center justify-center rounded-full bg-amber-400 px-6 py-4 text-base font-semibold text-slate-950 transition-colors hover:bg-amber-300"
               >
                 Start Something
               </a>

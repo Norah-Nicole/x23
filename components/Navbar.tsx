@@ -47,7 +47,7 @@ export default function Navbar() {
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
           isScrolled
             ? "border border-white/10 bg-slate-950/70 shadow-lg shadow-black/20 backdrop-blur-xl"
-            : "border border-transparent bg-transparent"
+            : "border border-transparent bg-gradient-to-b from-black/40 via-black/10 to-transparent"
         }`}
       >
         <nav className="flex items-center justify-between px-6 py-4 sm:px-8">
@@ -66,7 +66,7 @@ export default function Navbar() {
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
-            className="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 backdrop-blur-md"
+            className="relative flex h-11 w-11 items-center justify-center"
           >
             <span className="relative flex h-4 w-6 flex-col items-end justify-between">
               <motion.span
