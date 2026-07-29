@@ -17,7 +17,6 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
 
-  // GSAP scroll-triggered navbar background/shape transition.
   useEffect(() => {
     if (!triggerRef.current) return;
 
@@ -33,7 +32,6 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Invisible sentinel that the ScrollTrigger watches */}
       <div ref={triggerRef} className="pointer-events-none absolute top-0 h-px w-full" />
 
       <motion.header
@@ -51,17 +49,15 @@ export default function Navbar() {
         }`}
       >
         <nav className="flex items-center justify-between px-6 py-4 sm:px-8">
-          {/* Logo */}
           <Link href="/" className="font-display text-lg font-semibold tracking-tight text-white">
-            <Image 
-             src="/images/logos/logo.png"
-             alt="Kijivuland"
-             width={50}
-             height={50}
-             />
+            <Image
+              src="/images/logos/logo.png"
+              alt="Kijivuland"
+              width={50}
+              height={50}
+            />
           </Link>
 
-          {/* Custom hamburger toggle */}
           <button
             onClick={() => setIsMenuOpen((prev) => !prev)}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
