@@ -18,3 +18,18 @@ export interface NavLink {
   label: string;
   href: string;
 }
+
+export interface ServiceCategory {
+  /** Unique identifier, also used as the section anchor slug */
+  id: string;
+  /** Card title, e.g. "Individuals" */
+  title: string;
+  /** Background image for the card */
+  image: string;
+  /** The "For:" bullet list */
+  items: string[];
+  /** Supporting statement shown on hover/focus */
+  statement: string;
+  /** "Learn more" destination */
+  href: string;
+}
