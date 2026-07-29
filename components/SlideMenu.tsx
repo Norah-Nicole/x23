@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import { navLinks } from "@/lib/data";
@@ -43,7 +44,14 @@ const itemVariants = {
   exit: { opacity: 0, x: 24, transition: { duration: 0.3 } },
 };
 
+const allLinks = [
+  ...navLinks,
+  { id: "start-something", href: "/contact", label: "Start Something" },
+];
+
 export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+
   return (
     <AnimatePresence>
       {isOpen && (
@@ -68,56 +76,62 @@ export default function SlideMenu({ isOpen, onClose }: SlideMenuProps) {
             exit="exit"
             className="fixed inset-y-0 right-0 z-50 flex w-full flex-col justify-between border-l border-white/10 bg-slate-950/95 px-8 py-10 backdrop-blur-2xl sm:w-[420px]"
           >
-            <div>
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs tracking-[0.25em] text-slate-500">
-                  MENU
-                </span>
-                <button
-                  onClick={onClose}
-                  aria-label="Close menu"
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5"
-                >
-                  <X className="h-5 w-5 text-white" />
-                </button>
-              </div>
-
-              <motion.nav
-                variants={listVariants}
-                initial="hidden"
-                animate="visible"
-                exit="exit"
-                className="mt-16 flex flex-col gap-2"
+            <div className="flex items-center justify-end">
+              <button
+                onClick={onClose}
+                aria-label="Close menu"
+                className="flex h-11 w-11 items-center justify-center"
               >
-                {navLinks.map((link) => (
+                <X className="h-6 w-6 text-white" />
+              </button>
+            </div>
+
+            <motion.nav
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onMouseLeave={() => setHoveredId(null)}
+              className="flex flex-1 flex-col gap-6 py-10"
+            >
+              {allLinks.map((link) => {
+                const isHovered = hoveredId === link.id;
+                const isBlurred = hoveredId !== null && !isHovered;
+
+                return (
                   <motion.a
                     key={link.id}
                     href={link.href}
                     variants={itemVariants}
                     onClick={onClose}
-                    className="group flex items-baseline gap-4 py-3 text-4xl font-display font-medium tracking-tight text-slate-300 transition-colors hover:text-white sm:text-5xl"
+                    onMouseEnter={() => setHoveredId(link.id)}
+                    className="block origin-left py-3"
                   >
-                    <span className="text-sm font-mono text-slate-600 group-hover:text-blue-500">
-                      0{navLinks.indexOf(link) + 1}
+                    <span
+                      className={`inline-block font-display text-4xl font-medium tracking-tight transition-all duration-300 ease-out sm:text-5xl ${
+                        isHovered
+                          ? "scale-110 text-white blur-0"
+                          : isBlurred
+                          ? "scale-100 text-slate-300 blur-[2px]"
+                          : "scale-100 text-slate-300 blur-0"
+                      }`}
+                    >
+                      {link.label}
                     </span>
-                    {link.label}
                   </motion.a>
-                ))}
-              </motion.nav>
-            </div>
+                );
+              })}
+            </motion.nav>
 
-            <motion.div variants={itemVariants} initial="hidden" animate="visible" exit="exit">
-              <a
-                href="/contact"
-                onClick={onClose}
-                className="flex w-full items-center justify-center rounded-full bg-blue-600 px-6 py-4 text-base font-semibold text-white transition-colors hover:bg-blue-500"
-              >
-                Start Something
-              </a>
-              <p className="mt-6 text-center text-xs text-slate-600">
-                Nairobi, Kenya — available for select projects
-              </p>
-            </motion.div>
+            <motion.p
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="text-center text-xs text-slate-600"
+            >
+              Nairobi, Kenya — available for select projects
+            </motion.p>
           </motion.div>
         </>
       )}
