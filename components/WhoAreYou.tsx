@@ -11,16 +11,23 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+/** How long the stacked deck holds still before fanning out, in ms. */
+const STACK_HOLD_MS = 600;
+
 export default function Possibilities() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const prefersReducedMotion = useReducedMotion();
 
+  const holdTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const STACK_HOLD_MS = 500;
+
   // GSAP scroll-triggered reveal: cards start collapsed into a single deck
-  // near the center card's position, fan out into their resting layout as
-  // the section enters the viewport, and collapse back into the deck once
-  // it scrolls out of view (in either direction).
+  // near the center card's position, hold briefly in that stacked state,
+  // then fan out into their resting layout as the section enters the
+  // viewport — and collapse back into the deck once it scrolls out of view
+  // (in either direction).
   useEffect(() => {
     const cards = cardRefs.current.filter(Boolean) as HTMLDivElement[];
     if (!cards.length) return;
@@ -44,22 +51,41 @@ export default function Possibilities() {
       rotate: 0,
       scale: 1,
       opacity: 1,
-      duration: 1.5,
+      duration: 1,
       ease: "power3.out",
-      stagger: 0.2,
+      stagger: 0.15,
     });
+
+    const clearHold = () => {
+      if (holdTimeoutRef.current) {
+        clearTimeout(holdTimeoutRef.current);
+        holdTimeoutRef.current = null;
+      }
+    };
+
+    const playAfterHold = () => {
+      clearHold();
+      holdTimeoutRef.current = setTimeout(() => fanOut.play(), STACK_HOLD_MS);
+    };
+
+    const reverseNow = () => {
+      // Cancel a pending hold so leaving early doesn't fan out belatedly.
+      clearHold();
+      fanOut.reverse();
+    };
 
     const trigger = ScrollTrigger.create({
       trigger: sectionRef.current,
-      start: "top 65%",
+      start: "top 75%",
       end: "bottom 20%",
-      onEnter: () => fanOut.play(),
-      onEnterBack: () => fanOut.play(),
-      onLeave: () => fanOut.reverse(),
-      onLeaveBack: () => fanOut.reverse(),
+      onEnter: playAfterHold,
+      onEnterBack: playAfterHold,
+      onLeave: reverseNow,
+      onLeaveBack: reverseNow,
     });
 
     return () => {
+      clearHold();
       trigger.kill();
       fanOut.kill();
     };
@@ -69,16 +95,38 @@ export default function Possibilities() {
     <section
       id="content"
       ref={sectionRef}
-      className="relative overflow-hidden bg-slate-950 px-6 py-24 sm:px-10 sm:py-32 lg:px-16 lg:py-40"
-    >
-      <div className="mx-auto max-w-2xl px-2 text-center">
+      className="
+        relative
+        w-full
+        overflow-hidden
+        py-24
+        sm:py-32
+        lg:py-40
+        "
+      >
+        <div className="mx-auto max-w-7xl px-6 lg:px-8">
+      <div className="mx-auto max-w-3xl text-center">
         <span className="font-mono text-xs tracking-[0.25em] text-blue-400">POSSIBILITIES</span>
         <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight text-white sm:text-5xl">
-          What Are You ?
+          What are you trying to make possible?
         </h2>
       </div>
 
-      <div className="relative mx-auto mt-14 flex max-w-4xl flex-col items-center gap-8 sm:mt-16 lg:flex-row lg:items-stretch lg:justify-center lg:gap-6">
+      <div
+        className="
+            relative
+            mx-auto
+            mt-16
+            w-full
+            max-w-7xl
+            flex
+            flex-col
+            items-center
+            justify-center
+            lg:flex-row
+            lg:gap-10
+        "
+    >
         {services.map((service, index) => {
           const isActive = activeIndex === index;
           const center = (services.length - 1) / 2;
@@ -90,7 +138,12 @@ export default function Possibilities() {
                 cardRefs.current[index] = el;
               }}
               style={{ zIndex: services.length - Math.abs(index - center) }}
-              className="w-full max-w-[260px] sm:max-w-[280px]"
+              className="
+                w-full
+                sm:w-[280px]
+                lg:w-[320px]
+                flex-shrink-0
+                "
             >
               <motion.div
                 role="button"
@@ -169,6 +222,7 @@ export default function Possibilities() {
             </div>
           );
         })}
+      </div>
       </div>
     </section>
   );
