@@ -54,7 +54,8 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="font-display text-lg font-semibold tracking-tight text-white">
             <Image 
-             src="/images/logos/logo.png"
+             src="/images/logos/logo-no-bg.png"
+             className="rounded-full"
              alt="Kijivuland"
              width={50}
              height={50}
