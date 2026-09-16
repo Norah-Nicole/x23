@@ -293,6 +293,9 @@ code {
   scrollbar-color: var(--accent-dark) var(--background);
 }
 
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ==========================================================================
    7. SELECTION STYLING
    ========================================================================== */
